@@ -9,6 +9,8 @@ const url = 'mongodb://localhost:27017/';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  console.log(' in / request : ' + req.rawHeaders);
+  console.log('session in / '+ req.session.success);
   res.render('index',{success: req.session.success});
 });
 
@@ -29,7 +31,7 @@ router.get('/get-data', function(req, res, next) {
   });
 
 router.post('/insert', function(req, res, next) {
-  console.log('request : ' + req.header);
+  console.log('request : ' + req.rawHeaders);
   var item = {
     title: req.body.title,
     content: req.body.content,
