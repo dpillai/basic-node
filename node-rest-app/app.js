@@ -2,6 +2,7 @@ const express =require('express');
 const app = express();
 const logger = require('morgan');
 const bodyParser  = require('body-parser');
+const mongoose = require('mongoose');
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', "*");
@@ -14,6 +15,7 @@ app.use((req, res, next) => {
     next();
 });
 
+mongoose.connect('mongodb+srv://dpillai:' + process.env.MONGO_ATLAS_PW + '@cluster0.24rgb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
@@ -46,3 +48,14 @@ app.use((error, req, res, next) => {
 // });
 
 module.exports = app; 
+
+
+
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = "mongodb+srv://dpillai:<password>@cluster0.24rgb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// client.connect(err => {
+//   const collection = client.db("test").collection("devices");
+//   // perform actions on the collection object
+//   client.close();
+// });
