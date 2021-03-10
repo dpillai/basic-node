@@ -15,7 +15,8 @@ app.use((req, res, next) => {
     next();
 });
 
-mongoose.connect('mongodb+srv://dpillai:' + process.env.MONGO_ATLAS_PW + '@cluster0.24rgb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://dpillai:' + process.env.MONGO_ATLAS_PW + '@cluster0.24rgb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+{useNewUrlParser: true, useUnifiedTopology: true});
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
