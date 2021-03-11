@@ -8,8 +8,22 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
     Product.find()
     .then(docs => {
-        if(docs.length > 0)
-            res.status(200).json(docs)
+        if(docs.length > 0) {
+            const result = {
+                count: docs.length,
+                Products: docs.map(doc => {
+                    return({
+                        name: doc.name,
+                        price: doc.price,
+                        id: doc._id,
+                        type: 'GET',
+                        url: 'http://localhost:3000/products/' + doc._id
+                    })                    
+                })
+            }
+            res.status(200).json(result)
+        }
+            
         else
             res.status(200).json("No products found")
     })
@@ -33,9 +47,15 @@ router.post('/', (req, res, next) => {
     product.save()
     .then(result => {
         console.log(result);
-        res.status(200).json({
-            message: "it works for posts requests",
-            createProduct: product
+            res.status(200).json({
+            message: "Product added successfully",
+            createdProduct: {
+                name: result.name,
+                price: result.price,
+                id: result._id,
+                type: 'GET',
+                url: 'http://localhost:3000/products/' + result._id    
+            }
         });
     })
     .catch(error => {
@@ -54,7 +74,11 @@ router.get('/:productId', (req, res, next) => {
     .then(doc => {
         console.log(doc);
         if(doc) {
-            res.status(200).json(doc);
+            res.status(200).json({
+                name: doc.name,
+                price: doc.price,
+                id: doc._id
+            });
         }
         else {
             res.status(404).json({message: `product with ${req.params.productId} not found`});
@@ -71,18 +95,14 @@ router.get('/:productId', (req, res, next) => {
 router.patch('/:productId', (req, res, next) => {
     const id = req.params.productId;
 
-    var product = {
-        name: req.body.name,
-        price: req.body.price
-      };
-    
-      Product.findByIdAndUpdate({_id: id}, product)
+    const updateOps = {};
+    for (const key of Object.keys(req.body))     {
+      updateOps[key] = (req.body)[key];
+    }   
+      Product.findByIdAndUpdate({_id: id}, updateOps)
       .then(doc => {
         doc.save();
-        res.status(200).json({
-            message: "product updated",
-            Product: product
-        });
+        res.status(200).json({message: "product updated" });
       })
       .catch(error =>{ console.error(error); });
 });

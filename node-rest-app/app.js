@@ -42,21 +42,5 @@ app.use((error, req, res, next) => {
         }
     });
 });
-// app.use((req, res, next) => {
-//     res.status(200).json({
-//         message: 'it works'
-//     });
-// });
 
 module.exports = app; 
-
-
-
-// const MongoClient = require('mongodb').MongoClient;
-// const uri = "mongodb+srv://dpillai:<password>@cluster0.24rgb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });

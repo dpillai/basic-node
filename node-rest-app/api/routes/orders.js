@@ -1,6 +1,8 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const router = express.Router();
+const Order = require('../models/order');
 
 router.get('/', (req, res, next) => {
     res.status(200).json({
@@ -9,13 +11,28 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const order = {
-        productId: req.body.productId,
+    const order =  new Order ({
+        _id: new mongoose.Types.ObjectId(),
+        product: req.body.product,
         quantity: req.body.quantity
-    }
-    res.status(200).json({
-        message: "it works for posts requests",
-        orderCreated: order
+    })
+    order.save()
+    .then(result => {
+        res.status(200).json({
+            message: "it works for posts requests",
+            orderCreated: {
+                id: result._id,
+                Product: result.product,
+                quantity: result.quantity,
+                url: 'http://localhost:3000/orders' + result._id
+            }
+        })        
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            message: "Unable create order"
+        })
     });
 });
 
