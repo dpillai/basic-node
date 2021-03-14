@@ -72,6 +72,7 @@ router.post('/', (req, res, next) => {
 router.get('/:orderId', (req, res, next) => {
 
     Order.findById(req.params.orderId)
+    .populate('product', 'name')
     .then(doc => {
         console.log(doc);
         if(doc) {
@@ -102,11 +103,16 @@ router.patch('/:orderId', (req, res, next) => {
 
 router.delete('/:orderId', (req, res, next) => {
     const id = req.params.orderId;
- 
-    Product.findByIdAndDelete({_id: id})
+
+    Order.findByIdAndDelete({_id: id})
     .then(result => {
-      console.log('doc deleted :' + result);
-      res.status(200).json("order cancelled");
+        if(!result){
+            return res.status(404).json({
+                message: 'Order not found'
+            });
+        }
+        console.log('doc deleted :' + result);
+        res.status(200).json("order cancelled");
     })
     .catch(error =>{ console.error(error); });
 });
